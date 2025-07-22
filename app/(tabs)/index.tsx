@@ -1,9 +1,11 @@
 //import "global.css";
 import CartButton from "@/components/CartButton";
 import { images, offers } from "@/constants";
+import * as Sentry from "@sentry/react-native";
 import cn from "clsx";
 import { Fragment } from "react";
 import {
+  Button,
   FlatList,
   Image,
   Pressable,
@@ -15,8 +17,11 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Index() {
   return (
+    // FlatList is used to render a list of items like .map in react
+    // Pressable is used to create a button-like component that can be pressed
+    // It can be used to handle user interactions like onPress in web
+
     <SafeAreaView className="flex-1 bg-white">
-      // FlatList is used to render a list of items like .map in react
       <FlatList
         data={offers}
         renderItem={({ item, index }) => {
@@ -24,9 +29,6 @@ export default function Index() {
           return (
             // View is used to create a container for the items like div in web
             <View>
-              // Pressable is used to create a button-like component that can be
-              pressed // It can be used to handle user interactions like onPress
-              in web
               <Pressable
                 className={cn(
                   "offer-card",
@@ -68,13 +70,14 @@ export default function Index() {
             </View>
           );
         }}
+        // TouchableOpacity is used to create a button-like component that can be pressed
+
         contentContainerClassName="pb-28 px-5"
         ListHeaderComponent={() => (
           <View className="flex-between flex-row w-full my-5">
             <View className="flex-start">
               <Text className="small-bold text-primary">DELIVER TO</Text>
-              // TouchableOpacity is used to create a button-like component that
-              can be pressed
+
               <TouchableOpacity className="flex-center flex-row gap-x-1 mt-0.5">
                 <Text className="paragraph-bold text-dark-100">Namibia</Text>
                 <Image
@@ -87,6 +90,14 @@ export default function Index() {
 
             <CartButton />
           </View>
+        )}
+        ListFooterComponent={() => (
+          <Button
+            title="Try!"
+            onPress={() => {
+              Sentry.captureException(new Error("First error"));
+            }}
+          />
         )}
       />
     </SafeAreaView>
